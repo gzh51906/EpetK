@@ -1,0 +1,12 @@
+
+.left-nav-header{
+    display: flex;
+    align-items: center;
+    height: 80px;
+    background: #002140;
+}
+h1{
+    margin-left: 68px;
+    color: white;
+    font-style: 20px;
+}
