@@ -11,15 +11,12 @@ const assert = require('assert');
 //连接mongoDB
      const dbNanem = 'sanmao'
    function getAll(callback) {
-    
-
      MongoClient.connect(url,  (err, client)=>{
             // err:连接失败时的错误信息，默认为null
             // client：连接数据库的客户端
             if(err) {
                     console.log('链接失败');
             }
-  console.log('数据连接成功');
             const db = client.db(dbNanem)
           const collection = db.collection('yiji');
   // Find some documents
@@ -34,6 +31,40 @@ const assert = require('assert');
 
     }
   exports.getAll = getAll;
+
+
+
+
+
+   function getAll2(callback) {
+     MongoClient.connect(url,  (err, client)=>{
+            // err:连接失败时的错误信息，默认为null
+            // client：连接数据库的客户端
+            if(err) {
+                    console.log('链接失败');
+            }
+
+            const db = client.db(dbNanem)
+          const collection = db.collection('erji');
+  // Find some documents
+  collection.find({}).toArray(function(err, docs) {
+    assert.equal(err, null);
+
+    callback(docs)
+  });
+ 
+                    client.close();
+    });
+
+    }
+  exports.getAll2 = getAll2;
+
+
+
+
+
+
+
 
 // getAll(function (arr) {
 //     console.log(arr);

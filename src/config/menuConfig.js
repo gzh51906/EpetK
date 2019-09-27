@@ -19,7 +19,7 @@ const menuList = [
              {
             title:'商品管理',
           key:'/product',
-    icon:'mail',
+    icon:'bars',
         }
     ]
 
@@ -28,36 +28,35 @@ const menuList = [
  {
     title:'用户管理',
     key:'/user',
-    icon:'home',
+    icon:'user',
 },
 
 {
     title:'角色管理',
     key:'/role',
-    icon:'home',
+    icon:'meh',
 },
-
 
 {
     title:'图形图表',
     key:'/charts',
-    icon:'home',
+    icon:'area-chart',
 
  children:[
         {
             title:'柱形图',
           key:'/bar',
-    icon:'bars',
+    icon:'bar-chart',
         },
              {
             title:'折线图',
           key:'/line',
-    icon:'line',
+    icon:'line-chart',
         },
           {
             title:'饼图',
           key:'/pie',
-    icon:'line',
+    icon:'pie-chart',
         }
     ]
 

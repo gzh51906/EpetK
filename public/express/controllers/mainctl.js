@@ -1,14 +1,18 @@
 
 var db = require("../models/db");
 
-    exports.showIndex = function (req,res) {
-        db.getAll(function (arr) {
+    exports.showIndex2 = function (req,res) {
+        db.getAll2(function (arr) {
             console.log(arr);
     res.send(
         {
              "arr":arr
         }
     );
+
+
         })
+
+
     };
 

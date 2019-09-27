@@ -3,14 +3,10 @@ import React,{Component} from 'react';
 import "./index.css";
 
 import menuList from "../../config/menuConfig";
-
-
 import { Menu, Icon} from 'antd';
 import { Link, withRouter} from "react-router-dom";
 const { SubMenu } = Menu;
-
   class LeftNav extends Component{
-
 //   遍历menuConfig文件到左侧导航栏
 
         getMenuNodes = (menuList) => {
