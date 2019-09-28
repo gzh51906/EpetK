@@ -1,13 +1,13 @@
 import React,{Component} from 'react';
 import {Card,Table,Button,Icon,Modal} from "antd";
 import LinkButton from "../../components/link-button";
-import {reqL} from "../../api/index";
+import {reqL,reqUpdateCategory,reqAddCategory} from "../../api/index";
 import  AddFrom  from "./add-form.jsx";
-import  Update  from "./update-form.jsx";
+import  UpdateForm  from "./update-form.jsx";
 export default class Category extends Component{
    state = {
        flag:true,
-    //    parentId:"0",
+       parentId:"0",
        parentName:'',
        loading:false,
        categorys:[],
@@ -22,8 +22,9 @@ export default class Category extends Component{
      
         const  result = await reqL();
           this.setState({loading:false})
-         const categorys = result.data.arr
+         const categorys = result.data.data
          const subCategorys = categorys.filter(item=>item.parentId!=='0')
+   
             if (flag) {
                    this.setState({
             categorys
@@ -32,7 +33,7 @@ export default class Category extends Component{
             this.setState({
             subCategorys:subCategorys
         })
-        console.log(this.state);
+     
             }
     }
 
@@ -49,7 +50,7 @@ export default class Category extends Component{
     width:300,
     render:(category) => (
       <span >
-     <LinkButton onClick = {this.showUpdate} > 修改分类 </LinkButton>
+     <LinkButton onClick = { ()=> this.showUpdate(category)} > 修改分类 </LinkButton>
     {this.state.flag? <LinkButton  onClick = {()=>{this.showSub(category)}} > 查看子分类 </LinkButton>:null }
       </span>
     )
@@ -60,9 +61,11 @@ export default class Category extends Component{
     componentWillMount (){
         this.initColumns()
     }
-
+            //点击取消
 
         handleCancel = () =>{
+            //清除数据
+            this.from.resetFields()
              this.setState({
                   showStatus:0
             })
@@ -70,9 +73,22 @@ export default class Category extends Component{
 
     //添加分类
 
-addCategory = () =>{
-    console.log('showAdd');
+addCategory =async () =>{
+     this.setState({
+                  showStatus:0
+            })
+    const categoryName = this.from.getFieldValue('categoryName')
+    
+     this.from.resetFields()
+
+ await reqAddCategory (categoryId,categoryName)
+
+
+    this.getCategorys()
+
+
 }
+
 
 showAdd = () =>{
       this.setState({
@@ -80,14 +96,26 @@ showAdd = () =>{
             })
 }
 
-
-
 //修改分类
-updateCategory =() => {
-      console.log('123');
+updateCategory = async() => {
+      this.setState({
+                  showStatus:0
+            })
+    const categoryId = this.category._id
+
+    const categoryName = this.from.getFieldValue('categoryName')
+     this.from.resetFields()
+
+ await reqUpdateCategory (categoryId,categoryName)
+
+
+    this.getCategorys()
+
+
 }
 
-showUpdate = () =>{
+showUpdate = (category) =>{
+this.category = category
        this.setState({
                   showStatus:2
             })
@@ -125,9 +153,14 @@ showUpdate = () =>{
 
 
     render(){
+        const category = this.category || {}
 
-const {categorys,loading,flag,subCategorys,parentName,showStatus} = this.state
+       
+const {categorys,loading,flag,subCategorys,parentName,showStatus,parentId} = this.state
+
+
         // console.log(subCategorys);
+        // console.log(parentId);
      const title =  flag? '一级分类列表' :(
          <span>
          <LinkButton  onClick={this.showCat} >一级分类列表</LinkButton>
@@ -158,8 +191,7 @@ const {categorys,loading,flag,subCategorys,parentName,showStatus} = this.state
           onOk={this.addCategory}
           onCancel={this.handleCancel}
         >
-         <AddFrom/>
-         
+         <AddFrom  categorys = {categorys} parentId={parentId} setForm = {(from)=>{this.from = from}}  />
         </Modal>
 
 
@@ -169,7 +201,9 @@ const {categorys,loading,flag,subCategorys,parentName,showStatus} = this.state
           onOk={this.updateCategory}
           onCancel={this.handleCancel}
         >
-           <Update/>
+           <UpdateForm   categoryName = {category.title}
+               setForm = {(from)=>{this.from = from}}    />
+       
         
         </Modal>
 

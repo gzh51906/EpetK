@@ -2,9 +2,16 @@
 
 import ajax from "./ajax";
 
-// export const reqLogin =(username,password) => ajax('/login',{username,password},'POST')
-export const reqL =() => ajax('http://localhost:5000',{},'GET')
+//获取所有
+export const reqL =() => ajax('http://localhost:5000/goods/all',{},'GET')
+//添加
 
-// export  const reqAdduser =(user) => ajax('/manage/user/add',user,'POST')
+   export const reqAddCategory =(catgoryName) => ajax('http://localhost:5000/goods/change',{catgoryName},'post')
+
+
+// 更新
+export const reqUpdateCategory =(parentId,catgoryName) => ajax(`http://localhost:5000/goods/${parentId}`,{catgoryName},'post')
+
+
 
 
