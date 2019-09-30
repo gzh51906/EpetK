@@ -14,6 +14,18 @@ const {
 
 
 //拿到所有商品
+Router.get('/role', async (req, res) => {
+
+    let data = await find('role', {
+    });
+    res.send(formatData({
+    data
+    }))
+})
+
+
+
+
 Router.get('/all', async (req, res) => {
 
     let data = await find('yiji', {
@@ -24,26 +36,50 @@ Router.get('/all', async (req, res) => {
 
 })
 
-//jia
+//增加
 Router.post('/change', async (req, res) => {
     let {
     catgoryName
     } = req.body;
-
+    
     try {
       if(catgoryName){
-        insert('yiji', {catgoryName}  )
+          insert('yiji', {title:catgoryName})
       }
+      
         res.send(formatData())
     } catch (err) {
+
         res.send(formatData({
             code: 0
         }))
     }
 })
 
-//----
-Router.post('/:id', (req, res) => {console.log('k');
+// 删除
+
+Router.post('/del/:id', (req, res) => {
+let {
+        id
+    } = req.params;
+    let {
+        parentId  
+    } = req.body;
+    try {
+        remove('yiji', {
+            _id: parentId
+        })
+        res.send(formatData())
+    } catch (err) {
+        res.send(formatData({
+            code: 0
+        }))
+    }
+
+})
+
+//----修改
+Router.post('/xiugai/:id', (req, res) => {
 
     let {
         id
@@ -51,7 +87,6 @@ Router.post('/:id', (req, res) => {console.log('k');
     let {
         catgoryName  
     } = req.body;
-console.log(catgoryName  ,req.body);
 
 try{
     if(catgoryName){
@@ -69,6 +104,35 @@ try{
             code: 0
         }))
      }
+})
+
+// 查找
+Router.post('/searchlist',async (req, res) => {
+    console.log('123');
+//  let {
+//         id
+//     } = req.params;
+    let {
+        title  
+    } = req.body;
+    console.log("1",req.body);
+
+try{
+    let data
+    if(title){
+      data=await find('yiji', {
+            title
+            })
+           
+    }
+    //
+  res.send(formatData( {data}))  
+}catch (err) {
+        res.send(formatData({
+            code: 0
+        }))
+     }
+
 })
 
 

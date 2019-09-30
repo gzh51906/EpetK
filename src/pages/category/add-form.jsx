@@ -31,7 +31,7 @@ import { Form,Select,Input } from "antd";
    <Select>
                 <Option value="0">一级分类</Option>
               {
-                  categorys.map(c=> <Option value={c._id}>{c.title}</Option>)
+                  categorys.map(c=> <Option key={c._id} value={c._id}>{c.title}</Option>)
               }
             </Select>
         )

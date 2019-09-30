@@ -8,7 +8,7 @@ exports.formatData = function formData({
     if (code === 0) {
         msg = 'fail';
     }
-
+    console.log(data);
     return {
         code,
         data,

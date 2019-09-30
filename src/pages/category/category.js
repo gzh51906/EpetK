@@ -1,7 +1,7 @@
 import React,{Component} from 'react';
-import {Card,Table,Button,Icon,Modal} from "antd";
+import {Card,Table,Button,Icon,Modal,Input} from "antd";
 import LinkButton from "../../components/link-button";
-import {reqL,reqUpdateCategory,reqAddCategory} from "../../api/index";
+import {reqL,reqUpdateCategory,reqAddCategory,reqremoveCategory,reqSearchCategory} from "../../api/index";
 import  AddFrom  from "./add-form.jsx";
 import  UpdateForm  from "./update-form.jsx";
 export default class Category extends Component{
@@ -13,6 +13,7 @@ export default class Category extends Component{
        categorys:[],
        subCategorys:[],
        showStatus:0,   
+       searchName:'',
    }
     
     //异步获取请求 await返回对象 而不是prm对象
@@ -52,11 +53,25 @@ export default class Category extends Component{
       <span >
      <LinkButton onClick = { ()=> this.showUpdate(category)} > 修改分类 </LinkButton>
     {this.state.flag? <LinkButton  onClick = {()=>{this.showSub(category)}} > 查看子分类 </LinkButton>:null }
+    <LinkButton  onClick = { ()=> this.delete(category)} > 删除 </LinkButton>
       </span>
     )
   }
 ]
     }
+//删除
+    delete= async (category) =>{
+        console.log(category._id);
+
+    const parentId = category._id
+
+ await reqremoveCategory (parentId)
+    this.getCategorys()
+    }
+
+
+
+
 
     componentWillMount (){
         this.initColumns()
@@ -81,7 +96,7 @@ addCategory =async () =>{
     
      this.from.resetFields()
 
- await reqAddCategory (categoryId,categoryName)
+ await reqAddCategory (categoryName)
 
 
     this.getCategorys()
@@ -114,6 +129,9 @@ updateCategory = async() => {
 
 }
 
+
+
+
 showUpdate = (category) =>{
 this.category = category
        this.setState({
@@ -128,7 +146,7 @@ this.category = category
            flag:false,
            parentName:category.title
        }, ()=>{
-           console.log('flag',this.state.flag);
+        //    console.log('flag',this.state.flag);
              this.getCategorys()
        })
 
@@ -148,42 +166,58 @@ this.category = category
         //发送异步ajax请求
         componentDidMount (){
             this.getCategorys()
-           
+     
         }
-
-
+        // 查询
+        getPro = async()=>{
+            this.setState({loading:true})
+ const search  =  this.state.searchName
+ console.log(search)
+       const result   =  await  reqSearchCategory(search)
+       this.setState({loading:false})
+        const data12  =  result.data.data
+ console.log(data12);
+        this.setState({
+            subCategorys:data12
+        })
+        }
     render(){
         const category = this.category || {}
 
        
-const {categorys,loading,flag,subCategorys,parentName,showStatus,parentId} = this.state
+const {categorys,loading,flag,subCategorys,parentName,showStatus,parentId,searchName} = this.state
+  
 
 
-        // console.log(subCategorys);
-        // console.log(parentId);
-     const title =  flag? '一级分类列表' :(
+     const title =  flag? '一级分类列表'  :(
          <span>
          <LinkButton  onClick={this.showCat} >一级分类列表</LinkButton>
          <Icon type='arrow-right' style = {{marginRight:5}}/>
         <span>  {parentName} </span>
+                    <span> 
+          <Input placeholder = '关键字'  style={{width:"140px"}}
+            onChange = { event => this.setState({searchName:event.target.value})}
+           />     
+    <Button type = 'primary'   onClick = {this.getPro} >搜索 </Button>
+  </span>    
          </span>
      )
+
             const extra = (
+ 
                 <Button type = 'primary'  onClick = {this.showAdd}>
-                   
                     <Icon type = 'plus'/>
                 添加
                 </Button>
-
             )
-
         return (
-           <Card title={title} extra={extra}>
+           <Card title={title}  extra={extra} >
+       
+
     <Table  bordered  loading={loading}   rowKey = "_id" dataSource={flag? categorys: subCategorys} columns={this.columns}
         pagination = {{defaultPageSize:5,showQuickJumper:true}}
     
      />
-
 
        <Modal
           title="添加分类"
